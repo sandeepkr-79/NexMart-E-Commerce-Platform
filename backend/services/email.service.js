@@ -1,5 +1,5 @@
-import { Resend } from 'resend';
-import { config } from 'dotenv';
+import { Resend } from "resend";
+import { config } from "dotenv";
 
 config();
 
@@ -9,18 +9,18 @@ let resend = null;
 
 if (isEmailConfigured) {
   resend = new Resend(process.env.RESEND_API_KEY);
-  console.log('Resend Email Service configured.');
+  console.log("Resend Email Service configured.");
 } else {
   console.log(
-    'Resend API Key missing. Emails & OTPs will log directly to console.'
+    "Resend API Key missing. Emails & OTPs will log directly to console.",
   );
 }
 
 export const sendEmail = async ({ to, subject, html, text }) => {
   if (isEmailConfigured && resend) {
     try {
-      const fromEmail = process.env.RESEND_FROM_EMAIL || 'noreply@resend.dev';
-      
+      const fromEmail = process.env.RESEND_FROM_EMAIL || "noreply@resend.dev";
+
       await resend.emails.send({
         from: fromEmail,
         to,
@@ -33,27 +33,27 @@ export const sendEmail = async ({ to, subject, html, text }) => {
 
       return true;
     } catch (error) {
-      console.error('Resend Mail Dispatch Error:', error.message);
+      console.error("Resend Mail Dispatch Error:", error.message);
     }
   }
 
   // Fallback console logging
-  console.log('\n--- [MOCK EMAIL DISPATCH] ---');
+  console.log("\n--- [MOCK EMAIL DISPATCH] ---");
   console.log(`To:      ${to}`);
   console.log(`Subject: ${subject}`);
-  console.log(`Text:    ${text || 'See HTML below'}`);
+  console.log(`Text:    ${text || "See HTML below"}`);
 
   if (html) {
     console.log(`HTML Body:\n${html}`);
   }
 
-  console.log('------------------------------\n');
+  console.log("------------------------------\n");
 
   return true;
 };
 
 export const sendOtpEmail = async (email, otp) => {
-  const subject = 'NexMart - Confirm Your Email Address';
+  const subject = "NexMart - Confirm Your Email Address";
 
   const html = `
     <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #ddd; border-radius: 5px; max-width: 600px; color: #333;">
@@ -95,7 +95,7 @@ export const sendSellerStatusEmail = async (
   email,
   shopName,
   status,
-  feedback = ''
+  feedback = "",
 ) => {
   const subject = `NexMart - Seller Application Update: ${status}`;
 
@@ -113,11 +113,7 @@ export const sendSellerStatusEmail = async (
         by the platform administrator.
       </p>
 
-      ${
-        feedback
-          ? `<p><strong>Feedback:</strong> ${feedback}</p>`
-          : ''
-      }
+      ${feedback ? `<p><strong>Feedback:</strong> ${feedback}</p>` : ""}
 
       <p>
         If you have any questions, please contact the NexMart admin team.
