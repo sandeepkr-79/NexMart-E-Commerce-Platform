@@ -142,5 +142,77 @@
       "price": 1899
     },
     "vector": null
+  },
+  {
+    "id": "product_6a159edc505f26d6bc615144",
+    "text": "AeroBook Pro 15 by Aero. Ultra-thin metal chassis laptop powered by the latest Intel i7 processor, 16GB LPDDR5 RAM, and 512GB NVMe SSD. Features a gorgeous 15.6 inch IPS color-accurate screen.. Price: ₹59999. Tags: laptop, productivity, intel, thin-and-light.",
+    "metadata": {
+      "source": "product_db",
+      "productId": "6a159edc505f26d6bc615144",
+      "title": "AeroBook Pro 15",
+      "brand": "Aero",
+      "price": 59999
+    },
+    "vector": null
+  },
+  {
+    "id": "product_6a159edc505f26d6bc615146",
+    "text": "Aura Fit Watch S2 by Aura. Always-on AMOLED display smartwatch. Real-time heart rate monitor, blood oxygen tracker, and 24 sport activities. Integrates NFC and notification pushes.. Price: ₹2999. Tags: smartwatch, fitness, amoled, tracker.",
+    "metadata": {
+      "source": "product_db",
+      "productId": "6a159edc505f26d6bc615146",
+      "title": "Aura Fit Watch S2",
+      "brand": "Aura",
+      "price": 2999
+    },
+    "vector": null
+  },
+  {
+    "id": "product_6a159edc505f26d6bc615145",
+    "text": "SoundWave X1 ANC by SoundWave. Active Noise Cancelling over-ear wireless headphones. Premium audio driver tuning with 40-hour long-lasting battery life. Features dual-mic voice isolation.. Price: ₹4999. Tags: headphones, anc, wireless, audio.",
+    "metadata": {
+      "source": "product_db",
+      "productId": "6a159edc505f26d6bc615145",
+      "title": "SoundWave X1 ANC",
+      "brand": "SoundWave",
+      "price": 4999
+    },
+    "vector": null
+  },
+  {
+    "id": "product_6a159edc505f26d6bc615147",
+    "text": "Apex Phone Neo 5G by Apex. Elite gaming mobile phone, 120Hz refresh AMOLED display, 5000mAh battery with fast charging. Currently sold out due to high demand.. Price: ₹24999. Tags: mobile, gaming, 5g, android.",
+    "metadata": {
+      "source": "product_db",
+      "productId": "6a159edc505f26d6bc615147",
+      "title": "Apex Phone Neo 5G",
+      "brand": "Apex",
+      "price": 24999
+    },
+    "vector": null
+  },
+  {
+    "id": "product_6a159edc505f26d6bc615148",
+    "text": "Everyday Canvas Tote by UrbanCarry. Durable cotton canvas tote bag with reinforced handles and roomy storage for daily shopping, office, and travel essentials.. Price: ₹799. Tags: bag, canvas, tote, daily-use.",
+    "metadata": {
+      "source": "product_db",
+      "productId": "6a159edc505f26d6bc615148",
+      "title": "Everyday Canvas Tote",
+      "brand": "UrbanCarry",
+      "price": 799
+    },
+    "vector": null
+  },
+  {
+    "id": "product_6a159edc505f26d6bc615149",
+    "text": "ChefMate Steel Pan 28cm by ChefMate. Tri-ply stainless steel frying pan with induction-ready base, cool-touch handle, and even heat distribution for home cooking.. Price: ₹1899. Tags: kitchen, pan, steel, induction.",
+    "metadata": {
+      "source": "product_db",
+      "productId": "6a159edc505f26d6bc615149",
+      "title": "ChefMate Steel Pan 28cm",
+      "brand": "ChefMate",
+      "price": 1899
+    },
+    "vector": null
   }
 ]
