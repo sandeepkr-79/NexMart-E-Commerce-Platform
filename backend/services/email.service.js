@@ -1,67 +1,39 @@
-import nodemailer from 'nodemailer';
+import { Resend } from 'resend';
 import { config } from 'dotenv';
 
 config();
 
-const isEmailConfigured =
-  process.env.NODEMAILER_USER &&
-  process.env.NODEMAILER_PASS;
+const isEmailConfigured = process.env.RESEND_API_KEY;
 
-let transporter = null;
+let resend = null;
 
 if (isEmailConfigured) {
-  transporter = nodemailer.createTransport({
-    host: 'smtp-relay.brevo.com',
-    port: 2525,
-    secure: false,
-
-    auth: {
-      user: process.env.NODEMAILER_USER,
-      pass: process.env.NODEMAILER_PASS,
-    },
-
-    tls: {
-      rejectUnauthorized: false,
-    },
-
-    connectionTimeout: 10000,
-    greetingTimeout: 10000,
-    socketTimeout: 10000,
-  });
-
-  transporter.verify((error, success) => {
-    if (error) {
-      console.log('SMTP VERIFY ERROR:', error.message);
-    } else {
-      console.log('SMTP SERVER READY');
-    }
-  });
-
-  console.log('Nodemailer SMTP Transporter configured.');
+  resend = new Resend(process.env.RESEND_API_KEY);
+  console.log('Resend Email Service configured.');
 } else {
   console.log(
-    'Nodemailer SMTP details missing. Emails & OTPs will log directly to console.'
+    'Resend API Key missing. Emails & OTPs will log directly to console.'
   );
 }
 
 export const sendEmail = async ({ to, subject, html, text }) => {
-  if (isEmailConfigured && transporter) {
+  if (isEmailConfigured && resend) {
     try {
-      const mailOptions = {
-        from: `"NexMart Marketplace" <${process.env.NODEMAILER_USER}>`,
+      const fromEmail = process.env.RESEND_FROM_EMAIL || 'noreply@resend.dev';
+      
+      await resend.emails.send({
+        from: fromEmail,
         to,
         subject,
-        text,
         html,
-      };
-
-      await transporter.sendMail(mailOptions);
+        text,
+      });
 
       console.log(`Email successfully dispatched to ${to}`);
 
       return true;
     } catch (error) {
-      console.error('SMTP Mail Dispatch Error:', error.message);
+      console.error('Resend Mail Dispatch Error:', error.message);
     }
   }
 
