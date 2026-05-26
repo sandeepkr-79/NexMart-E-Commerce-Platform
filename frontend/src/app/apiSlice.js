@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { setCredentials, logOut } from "./authSlice.js";
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: "/",
+  baseUrl: import.meta.env.VITE_BACKEND_URL,
   prepareHeaders: (headers, { getState }) => {
     const token = getState().auth.token;
     if (token) {
