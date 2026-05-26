@@ -26,6 +26,9 @@ import couponRoutes from './routes/couponRoutes.js';
 config();
 
 const app = express();
+
+app.set('trust proxy', true);
+
 const server = http.createServer(app);
 
 // Connect to MongoDB
