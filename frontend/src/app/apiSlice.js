@@ -64,13 +64,6 @@ export const apiSlice = createApi({
         method: "POST",
         body: data,
       }),
-    }),
-    verifyOtp: builder.mutation({
-      query: (data) => ({
-        url: "/api/auth/verify-otp",
-        method: "POST",
-        body: data,
-      }),
       invalidatesTags: ["User"],
     }),
     logout: builder.mutation({
