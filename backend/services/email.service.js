@@ -23,18 +23,14 @@ if (isEmailConfigured) {
       rejectUnauthorized: false,
     },
 
-    connectionTimeout: 10000,
-    greetingTimeout: 10000,
-    socketTimeout: 10000,
+    // Increased timeout values
+    connectionTimeout: 30000,
+    greetingTimeout: 30000,
+    socketTimeout: 30000,
   });
 
-  transporter.verify((error, success) => {
-    if (error) {
-      console.log("SMTP VERIFY ERROR:", error.message);
-    } else {
-      console.log("SMTP SERVER READY");
-    }
-  });
+  // REMOVE transporter.verify()
+  // It causes timeout issues on Render
 
   console.log("Nodemailer SMTP Transporter configured.");
 } else {
@@ -54,21 +50,24 @@ export const sendEmail = async ({ to, subject, html, text }) => {
         html,
       };
 
-      await transporter.sendMail(mailOptions);
+      const info = await transporter.sendMail(mailOptions);
 
-      console.log(`Email successfully dispatched to ${to}`);
+      console.log("MAIL SENT SUCCESSFULLY");
+      console.log("Message ID:", info.messageId);
 
       return true;
     } catch (error) {
-      console.error("SMTP Mail Dispatch Error:", error.message);
+      console.error("FULL SMTP ERROR:", error);
+
+      return false;
     }
   }
 
   // Fallback console logging
   console.log("\n--- [MOCK EMAIL DISPATCH] ---");
-  console.log(`To:      ${to}`);
+  console.log(`To: ${to}`);
   console.log(`Subject: ${subject}`);
-  console.log(`Text:    ${text || "See HTML below"}`);
+  console.log(`Text: ${text || "See HTML below"}`);
 
   if (html) {
     console.log(`HTML Body:\n${html}`);

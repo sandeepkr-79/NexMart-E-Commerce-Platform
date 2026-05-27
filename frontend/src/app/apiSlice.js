@@ -40,6 +40,7 @@ export const apiSlice = createApi({
   baseQuery: baseQueryWithReauth,
   tagTypes: [
     "Product",
+    "Wishlist",
     "Order",
     "User",
     "Seller",
@@ -363,6 +364,26 @@ export const apiSlice = createApi({
       invalidatesTags: ["Category"],
     }),
 
+    // Wishlist Endpoints
+    getWishlist: builder.query({
+      query: () => "/api/wishlist",
+      providesTags: ["Wishlist"],
+    }),
+    addToWishlist: builder.mutation({
+      query: (productId) => ({
+        url: `/api/wishlist/${productId}`,
+        method: "POST",
+      }),
+      invalidatesTags: ["Wishlist"],
+    }),
+    removeFromWishlist: builder.mutation({
+      query: (productId) => ({
+        url: `/api/wishlist/${productId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Wishlist"],
+    }),
+
     // Review Endpoints
     getProductReviews: builder.query({
       query: (productId) => `/api/reviews/product/${productId}`,
@@ -520,6 +541,9 @@ export const {
 
   // Categories
   useGetCategoriesQuery,
+  useGetWishlistQuery,
+  useAddToWishlistMutation,
+  useRemoveFromWishlistMutation,
   useCreateCategoryMutation,
   useDeleteCategoryMutation,
 

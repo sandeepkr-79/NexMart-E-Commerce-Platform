@@ -1,63 +1,93 @@
-import React, { useState, useEffect } from 'react';
-import { useSearchParams, Link } from 'react-router-dom';
-import { useGetProductsQuery, useGetCategoriesQuery } from '../../app/apiSlice.js';
-import RatingStars from '../../components/RatingStars.jsx';
-import { Filter, SlidersHorizontal, Search, ArrowUpDown, ChevronLeft, ChevronRight } from 'lucide-react';
-import toast from 'react-hot-toast';
+import React, { useState, useEffect } from "react";
+import { useSearchParams, Link } from "react-router-dom";
+import {
+  useGetProductsQuery,
+  useGetCategoriesQuery,
+} from "../../app/apiSlice.js";
+import RatingStars from "../../components/RatingStars.jsx";
+import {
+  Filter,
+  SlidersHorizontal,
+  Search,
+  ArrowUpDown,
+  ChevronLeft,
+  ChevronRight,
+  Heart,
+} from "lucide-react";
+import toast from "react-hot-toast";
+import {
+  useGetWishlistQuery,
+  useAddToWishlistMutation,
+  useRemoveFromWishlistMutation,
+} from "../../app/apiSlice.js";
 
 const Products = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  
+
   // Local filter states syncing with searchParams
-  const [keywordInput, setKeywordInput] = useState(searchParams.get('keyword') || '');
-  const [selectedCat, setSelectedCat] = useState(searchParams.get('category') || '');
-  const [priceMax, setPriceMax] = useState(searchParams.get('price[lte]') || '100000');
-  const [sortBy, setSortBy] = useState(searchParams.get('sort') || '-createdAt');
-  const [currentPage, setCurrentPage] = useState(Number(searchParams.get('page')) || 1);
+  const [keywordInput, setKeywordInput] = useState(
+    searchParams.get("keyword") || "",
+  );
+  const [selectedCat, setSelectedCat] = useState(
+    searchParams.get("category") || "",
+  );
+  const [priceMax, setPriceMax] = useState(
+    searchParams.get("price[lte]") || "100000",
+  );
+  const [sortBy, setSortBy] = useState(
+    searchParams.get("sort") || "-createdAt",
+  );
+  const [currentPage, setCurrentPage] = useState(
+    Number(searchParams.get("page")) || 1,
+  );
 
   // Sync inputs with URL changes (e.g. searching from Navbar)
   useEffect(() => {
-    setKeywordInput(searchParams.get('keyword') || '');
-    setSelectedCat(searchParams.get('category') || '');
-    setPriceMax(searchParams.get('price[lte]') || '100000');
-    setSortBy(searchParams.get('sort') || '-createdAt');
-    setCurrentPage(Number(searchParams.get('page')) || 1);
+    setKeywordInput(searchParams.get("keyword") || "");
+    setSelectedCat(searchParams.get("category") || "");
+    setPriceMax(searchParams.get("price[lte]") || "100000");
+    setSortBy(searchParams.get("sort") || "-createdAt");
+    setCurrentPage(Number(searchParams.get("page")) || 1);
   }, [searchParams]);
 
   // Construct API Query String
   const getQueryString = () => {
     const params = new URLSearchParams();
-    if (keywordInput) params.append('keyword', keywordInput);
-    if (selectedCat) params.append('category[in]', selectedCat); // filter category
-    if (priceMax) params.append('price[lte]', priceMax);
-    if (sortBy) params.append('sort', sortBy);
-    params.append('page', currentPage);
-    params.append('limit', 8); // 8 items per page
+    if (keywordInput) params.append("keyword", keywordInput);
+    if (selectedCat) params.append("category[in]", selectedCat); // filter category
+    if (priceMax) params.append("price[lte]", priceMax);
+    if (sortBy) params.append("sort", sortBy);
+    params.append("page", currentPage);
+    params.append("limit", 8); // 8 items per page
     return params.toString();
   };
 
-  const { data, isLoading, isError, refetch } = useGetProductsQuery(getQueryString());
+  const { data, isLoading, isError, refetch } =
+    useGetProductsQuery(getQueryString());
   const { data: catData } = useGetCategoriesQuery();
+  const { data: wishlistData } = useGetWishlistQuery();
+  const [addToWishlist] = useAddToWishlistMutation();
+  const [removeFromWishlist] = useRemoveFromWishlistMutation();
 
   const handleApplyFilters = (e) => {
     if (e) e.preventDefault();
-    
+
     const params = {};
     if (keywordInput) params.keyword = keywordInput;
     if (selectedCat) params.category = selectedCat;
-    if (priceMax) params['price[lte]'] = priceMax;
+    if (priceMax) params["price[lte]"] = priceMax;
     if (sortBy) params.sort = sortBy;
     params.page = 1; // Reset to page 1 on filter trigger
-    
+
     setSearchParams(params);
     setCurrentPage(1);
   };
 
   const handleClearFilters = () => {
-    setKeywordInput('');
-    setSelectedCat('');
-    setPriceMax('100000');
-    setSortBy('-createdAt');
+    setKeywordInput("");
+    setSelectedCat("");
+    setPriceMax("100000");
+    setSortBy("-createdAt");
     setCurrentPage(1);
     setSearchParams({});
   };
@@ -74,9 +104,12 @@ const Products = () => {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-2xl font-extrabold text-slate-100 flex items-center gap-2">
-            <SlidersHorizontal size={22} className="text-violet-400" /> Marketplace Catalog
+            <SlidersHorizontal size={22} className="text-violet-400" />{" "}
+            Marketplace Catalog
           </h1>
-          <p className="text-xs text-slate-400 font-medium">Browse verified merchant inventory listings</p>
+          <p className="text-xs text-slate-400 font-medium">
+            Browse verified merchant inventory listings
+          </p>
         </div>
 
         {/* Global Sorting */}
@@ -107,7 +140,7 @@ const Products = () => {
             <h3 className="font-bold text-sm text-slate-200 flex items-center gap-2">
               <Filter size={16} className="text-violet-400" /> Filter Options
             </h3>
-            <button 
+            <button
               onClick={handleClearFilters}
               className="text-[10px] uppercase font-bold text-slate-400 hover:text-violet-400"
             >
@@ -118,7 +151,9 @@ const Products = () => {
           <form onSubmit={handleApplyFilters} className="space-y-5">
             {/* Search Keyword */}
             <div className="form-control">
-              <label className="label text-xs font-bold uppercase text-slate-400">Search Text</label>
+              <label className="label text-xs font-bold uppercase text-slate-400">
+                Search Text
+              </label>
               <div className="relative">
                 <input
                   type="text"
@@ -127,13 +162,18 @@ const Products = () => {
                   onChange={(e) => setKeywordInput(e.target.value)}
                   className="input input-bordered input-sm bg-slate-950 border-slate-800 text-slate-200 pl-8 focus:outline-none focus:border-violet-500 rounded-lg w-full"
                 />
-                <Search size={12} className="absolute left-2.5 top-2.5 text-slate-500" />
+                <Search
+                  size={12}
+                  className="absolute left-2.5 top-2.5 text-slate-500"
+                />
               </div>
             </div>
 
             {/* Category Dropdown */}
             <div className="form-control">
-              <label className="label text-xs font-bold uppercase text-slate-400">Category</label>
+              <label className="label text-xs font-bold uppercase text-slate-400">
+                Category
+              </label>
               <select
                 value={selectedCat}
                 onChange={(e) => setSelectedCat(e.target.value)}
@@ -141,7 +181,9 @@ const Products = () => {
               >
                 <option value="">All Categories</option>
                 {catData?.categories?.map((cat) => (
-                  <option key={cat._id} value={cat._id}>{cat.name}</option>
+                  <option key={cat._id} value={cat._id}>
+                    {cat.name}
+                  </option>
                 ))}
               </select>
             </div>
@@ -150,7 +192,9 @@ const Products = () => {
             <div className="form-control">
               <div className="flex justify-between items-center text-xs font-bold text-slate-400 mb-1">
                 <span>Max Price</span>
-                <span className="text-violet-400">₹{Number(priceMax).toLocaleString()}</span>
+                <span className="text-violet-400">
+                  ₹{Number(priceMax).toLocaleString()}
+                </span>
               </div>
               <input
                 type="range"
@@ -181,64 +225,138 @@ const Products = () => {
           {isLoading ? (
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
               {[...Array(6)].map((_, i) => (
-                <div key={i} className="animate-pulse bg-slate-900 border border-slate-800 rounded-2xl h-80 w-full"></div>
+                <div
+                  key={i}
+                  className="animate-pulse bg-slate-900 border border-slate-800 rounded-2xl h-80 w-full"
+                ></div>
               ))}
             </div>
           ) : isError ? (
             <div className="text-center p-12 bg-slate-900 border border-slate-800 rounded-2xl">
-              <p className="text-sm text-slate-400">Catalog items failed to load. Please verify API server state.</p>
+              <p className="text-sm text-slate-400">
+                Catalog items failed to load. Please verify API server state.
+              </p>
             </div>
           ) : data?.products?.length === 0 ? (
             <div className="text-center p-12 bg-slate-900 border border-slate-800 rounded-2xl space-y-2">
-              <p className="text-base font-bold text-slate-300">No products found matching filters</p>
-              <p className="text-xs text-slate-500">Try modifying your search criteria or resetting filters.</p>
-              <button onClick={handleClearFilters} className="btn btn-primary btn-xs mt-3">Reset Filters</button>
+              <p className="text-base font-bold text-slate-300">
+                No products found matching filters
+              </p>
+              <p className="text-xs text-slate-500">
+                Try modifying your search criteria or resetting filters.
+              </p>
+              <button
+                onClick={handleClearFilters}
+                className="btn btn-primary btn-xs mt-3"
+              >
+                Reset Filters
+              </button>
             </div>
           ) : (
             <>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                {data?.products?.map((p) => (
-                  <Link
-                    to={`/product/${p._id}`}
-                    key={p._id}
-                    className="card bg-slate-900 border border-slate-800/80 rounded-2xl overflow-hidden hover:border-violet-500/30 hover:scale-[1.01] transition-all group cursor-pointer"
-                  >
-                    <figure className="relative h-44 overflow-hidden bg-slate-950">
-                      <img
-                        src={p.images[0] || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600'}
-                        alt={p.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform"
-                      />
-                      {p.stock === 0 && (
-                        <div className="absolute inset-0 bg-slate-950/80 flex items-center justify-center">
-                          <span className="badge badge-error badge-sm font-bold uppercase py-2 px-3 rounded-full text-white">Out of Stock</span>
-                        </div>
-                      )}
-                    </figure>
+                {data?.products?.map((p) => {
+                  const wishlistIds = new Set(
+                    wishlistData?.products?.map((x) => x._id),
+                  );
+                  const isInWishlist = wishlistIds.has(p._id);
 
-                    <div className="p-4 space-y-2">
-                      <span className="text-[10px] uppercase font-extrabold text-slate-500">{p.brand}</span>
-                      <h3 className="font-bold text-sm text-slate-200 truncate group-hover:text-violet-400 transition-colors">{p.title}</h3>
-                      <RatingStars rating={p.ratings} reviewCount={p.reviewCount} size={13} />
+                  const handleToggleWishlist = async (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    try {
+                      if (isInWishlist) {
+                        await removeFromWishlist(p._id).unwrap();
+                        toast.success("Removed from wishlist");
+                      } else {
+                        await addToWishlist(p._id).unwrap();
+                        toast.success("Added to wishlist");
+                      }
+                    } catch (err) {
+                      console.error("Wishlist toggle error", err);
+                      toast.error("Failed to update wishlist");
+                    }
+                  };
 
-                      <div className="flex justify-between items-center pt-2">
-                        <span className="text-base font-extrabold text-slate-100">₹{p.price.toLocaleString('en-IN')}</span>
-                        {p.comparePrice > p.price && (
-                          <span className="text-xs text-slate-500 line-through">₹{p.comparePrice.toLocaleString()}</span>
+                  return (
+                    <Link
+                      to={`/product/${p._id}`}
+                      key={p._id}
+                      className="card bg-slate-900 border border-slate-800/80 rounded-2xl overflow-hidden hover:border-violet-500/30 hover:scale-[1.01] transition-all group cursor-pointer"
+                    >
+                      <figure className="relative h-44 overflow-hidden bg-slate-950">
+                        <img
+                          src={
+                            p.images[0] ||
+                            "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600"
+                          }
+                          alt={p.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                        />
+                        <button
+                          onClick={handleToggleWishlist}
+                          className="absolute top-3 right-3 z-20 p-2 rounded-full bg-slate-900/70 hover:bg-slate-800 text-pink-400"
+                          aria-label={
+                            isInWishlist
+                              ? "Remove from wishlist"
+                              : "Add to wishlist"
+                          }
+                        >
+                          <Heart
+                            size={18}
+                            fill={isInWishlist ? "currentColor" : "none"}
+                            className={
+                              isInWishlist ? "text-pink-400" : "text-slate-300"
+                            }
+                          />
+                        </button>
+
+                        {p.stock === 0 && (
+                          <div className="absolute inset-0 bg-slate-950/80 flex items-center justify-center">
+                            <span className="badge badge-error badge-sm font-bold uppercase py-2 px-3 rounded-full text-white">
+                              Out of Stock
+                            </span>
+                          </div>
                         )}
+                      </figure>
+
+                      <div className="p-4 space-y-2">
+                        <span className="text-[10px] uppercase font-extrabold text-slate-500">
+                          {p.brand}
+                        </span>
+                        <h3 className="font-bold text-sm text-slate-200 truncate group-hover:text-violet-400 transition-colors">
+                          {p.title}
+                        </h3>
+                        <RatingStars
+                          rating={p.ratings}
+                          reviewCount={p.reviewCount}
+                          size={13}
+                        />
+
+                        <div className="flex justify-between items-center pt-2">
+                          <span className="text-base font-extrabold text-slate-100">
+                            ₹{p.price.toLocaleString("en-IN")}
+                          </span>
+                          {p.comparePrice > p.price && (
+                            <span className="text-xs text-slate-500 line-through">
+                              ₹{p.comparePrice.toLocaleString()}
+                            </span>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  </Link>
-                ))}
+                    </Link>
+                  );
+                })}
               </div>
 
               {/* Pagination Controls */}
               {data?.totalProducts > 8 && (
                 <div className="flex justify-between items-center pt-4 border-t border-slate-800/60 text-xs font-semibold">
                   <span className="text-slate-500">
-                    Showing {data.products.length} of {data.totalProducts} results
+                    Showing {data.products.length} of {data.totalProducts}{" "}
+                    results
                   </span>
-                  
+
                   <div className="flex gap-2">
                     <button
                       onClick={() => handlePageChange(currentPage - 1)}

@@ -29,3 +29,24 @@ Thumbs.db
 
 # Misc
 *.log
+
+
+# DEPLOYMENT_CHECKLIST.md
+# DEPLOYMENT_STATUS.md
+# DEPLOYMENT.md
+# FINAL_DEPLOYMENT_SUMMARY.md
+# QUICK_START.md
+# render.yaml
+
+# vercel.json
+
+# Deployment files
+DEPLOYMENT_CHECKLIST.md
+DEPLOYMENT_STATUS.md
+DEPLOYMENT.md
+FINAL_DEPLOYMENT_SUMMARY.md
+QUICK_START.md
+render.yaml
+
+
+frontend/vercel.json

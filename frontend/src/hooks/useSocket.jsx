@@ -4,7 +4,7 @@ import { io } from "socket.io-client";
 import toast from "react-hot-toast";
 import { selectCurrentUser } from "../app/authSlice.js";
 
-const socketUrl = import.meta.env.VITE_SERVER_URL || "http://localhost:5000";
+const socketUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
 
 export const useSocket = () => {
   const user = useSelector(selectCurrentUser);
