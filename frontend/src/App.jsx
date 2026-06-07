@@ -37,7 +37,7 @@ import AIManagement from "./pages/admin/AIManagement.jsx";
 
 const App = () => {
   return (
-    <BrowserRouter>
+    <BrowserRouter future={{ v7_relativeSplatPath: true }}>
       <Routes>
         <Route path="/" element={<PublicLayout />}>
           <Route index element={<Home />} />

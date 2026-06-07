@@ -35,7 +35,7 @@ if (isEmailConfigured) {
   console.log("Nodemailer SMTP Transporter configured.");
 } else {
   console.log(
-    "Nodemailer SMTP details missing. Emails & OTPs will log directly to console.",
+    "Nodemailer SMTP details missing. Emails will log directly to console.",
   );
 }
 

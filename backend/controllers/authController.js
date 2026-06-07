@@ -60,8 +60,6 @@ export const register = async (req, res, next) => {
   }
 };
 
-// Verify OTP - REMOVED (users now auto-verified on registration)
-
 // Login User
 export const login = async (req, res, next) => {
   try {

@@ -483,7 +483,6 @@ export const {
   // Auth
   useLoginMutation,
   useRegisterMutation,
-  useVerifyOtpMutation,
   useLogoutMutation,
   useGoogleLoginMutation,
 
